@@ -18,17 +18,9 @@
     url: 'https://api.github.com/repos/istio/istio/releases/latest'
   register: istio_version_result
 
-- name:
-  debug:
-    msg: "{{ istio_version_result.json }}"
-
-- name:
-  debug:
-    msg: "{{ istio_version_result.stdout }}"
-
 - name: register istio lastest version
   set_fact:
-    ISTIO_VERSION: "{{ istio_version_result.stdout }}"
+    ISTIO_VERSION: "{{ istio_version_result.json.tag_name }}"
 
 - name: Get istio tarball
   get_url:
