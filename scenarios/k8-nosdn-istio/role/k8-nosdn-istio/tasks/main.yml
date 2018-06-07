@@ -48,7 +48,7 @@
     state: absent
 
 - name: rename the istio directory
-  shell: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
+  command: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
              {{ remote_xci_path }}/.cache/repos/istio"
   changed_when: True
 
