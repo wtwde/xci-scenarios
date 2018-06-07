@@ -17,6 +17,7 @@
   shell: 'curl -L -s {{ISTIO_RELEASE_URL}} | \
               grep tag_name | sed "s/ *\"tag_name\": *\"\(.*\)\",*/\1/"'
   register: istio_version_result
+  changed_when: True
 
 - name:
   debug:
@@ -46,6 +47,7 @@
 - name: rename the istio directory
   shell: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
              {{ remote_xci_path }}/.cache/repos/istio"
+  changed_when: True
 
 - name: copy istioctl to /usr/local/bin/
   copy:
