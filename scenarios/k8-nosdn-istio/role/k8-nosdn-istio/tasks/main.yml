@@ -1,0 +1,55 @@
+##############################################################################
+# Copyright (c) 2018 HUAWEI TECHNOLOGIES CO.,LTD and others.
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License, Version 2.0
+# which accompanies this distribution, and is available at
+# http://www.apache.org/licenses/LICENSE-2.0
+##############################################################################
+---
+
+- name: copy k8s-cluster.yml
+  copy:
+    src: "k8s-cluster.yml"
+    dest: "{{ remote_xci_path }}/.cache/repos/kubespray/opnfv_inventory/group_vars/k8s-cluster.yml"
+
+    - name: Get istio lastest version
+      shell: 'curl -L -s {{ISTIO_RELEASE_URL}} | \
+                  grep tag_name | sed "s/ *\"tag_name\": *\"\(.*\)\",*/\1/"'
+      register: istio_version_result
+
+    - name:
+      debug:
+        msg: "{{ istio_version_result.stdout }}"
+
+    - name: register istio lastest version
+      set_fact:
+        ISTIO_VERSION: "{{ istio_version_result.stdout }}"
+
+    - name: Get istio tarball
+      get_url:
+        url: "{{ISTIO_TAR_URL}}/{{ISTIO_VERSION}}/istio-{{ISTIO_VERSION}}-linux.tar.gz"
+        dest:  "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
+        validate_certs: 'no'
+
+    - name: unarchive istio tarball
+      unarchive:
+        src: "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
+        dest: "{{ remote_xci_path }}/.cache/repos/"
+        remote_src: 'yes'
+
+    - name: remove the istio directory if exist
+      file:
+        src: "{{ remote_xci_path }}/.cache/repos/istio"
+        state: absent
+
+    - name: rename the istio directory
+      shell: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
+                 {{ remote_xci_path }}/.cache/repos/istio"
+
+    - name: copy istioctl to /usr/local/bin/
+      copy:
+        src: "{{ remote_xci_path }}/.cache/repos/istio/bin/istioctl"
+        dest: /usr/local/bin/istioctl
+        mode: 0755
+        remote_src: 'yes'
