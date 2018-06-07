@@ -36,7 +36,7 @@
 
 - name: remove the istio directory if exist
   file:
-    src: "{{ remote_xci_path }}/.cache/repos/istio"
+    dest: "{{ remote_xci_path }}/.cache/repos/istio"
     state: absent
 
 - name: rename the istio directory
