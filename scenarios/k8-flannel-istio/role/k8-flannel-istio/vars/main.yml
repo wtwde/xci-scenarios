@@ -1,0 +1,4 @@
+---
+
+ISTIO_TAR_URL: "https://github.com/istio/istio/releases/download"
+ISTIO_RELEASE_URL: "https://api.github.com/repos/istio/istio/releases/latest"
