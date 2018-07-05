@@ -13,40 +13,40 @@
     src: "k8s-cluster.yml"
     dest: "{{ remote_xci_path }}/.cache/repos/kubespray/opnfv_inventory/group_vars/k8s-cluster.yml"
 
-- name: Get istio lastest version
-  uri:
-    url: 'https://api.github.com/repos/istio/istio/releases/latest'
-  register: istio_version_result
-
-- name: register istio lastest version
-  set_fact:
-    ISTIO_VERSION: "{{ istio_version_result.json.tag_name }}"
-
-- name: Get istio tarball
-  get_url:
-    url: "{{ISTIO_TAR_URL}}/{{ISTIO_VERSION}}/istio-{{ISTIO_VERSION}}-linux.tar.gz"
-    dest:  "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
-    validate_certs: 'no'
-
-- name: unarchive istio tarball
-  unarchive:
-    src: "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
-    dest: "{{ remote_xci_path }}/.cache/repos/"
-    remote_src: 'yes'
-
-- name: remove the istio directory if exist
-  file:
-    dest: "{{ remote_xci_path }}/.cache/repos/istio"
-    state: absent
-
-- name: rename the istio directory
-  command: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
-             {{ remote_xci_path }}/.cache/repos/istio"
-  changed_when: True
-
-- name: copy istioctl to /usr/local/bin/
-  copy:
-    src: "{{ remote_xci_path }}/.cache/repos/istio/bin/istioctl"
-    dest: /usr/local/bin/istioctl
-    mode: 0755
-    remote_src: 'yes'
+#- name: Get istio lastest version
+#  uri:
+#    url: 'https://api.github.com/repos/istio/istio/releases/latest'
+#  register: istio_version_result
+#
+#- name: register istio lastest version
+#  set_fact:
+#    ISTIO_VERSION: "{{ istio_version_result.json.tag_name }}"
+#
+#- name: Get istio tarball
+#  get_url:
+#    url: "{{ISTIO_TAR_URL}}/{{ISTIO_VERSION}}/istio-{{ISTIO_VERSION}}-linux.tar.gz"
+#    dest:  "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
+#    validate_certs: 'no'
+#
+#- name: unarchive istio tarball
+#  unarchive:
+#    src: "{{ remote_xci_path }}/.cache/repos/istio.tar.gz"
+#    dest: "{{ remote_xci_path }}/.cache/repos/"
+#    remote_src: 'yes'
+#
+#- name: remove the istio directory if exist
+#  file:
+#    dest: "{{ remote_xci_path }}/.cache/repos/istio"
+#    state: absent
+#
+#- name: rename the istio directory
+#  command: "mv {{ remote_xci_path }}/.cache/repos/istio-{{ISTIO_VERSION}} \
+#             {{ remote_xci_path }}/.cache/repos/istio"
+#  changed_when: True
+#
+#- name: copy istioctl to /usr/local/bin/
+#  copy:
+#    src: "{{ remote_xci_path }}/.cache/repos/istio/bin/istioctl"
+#    dest: /usr/local/bin/istioctl
+#    mode: 0755
+#    remote_src: 'yes'
